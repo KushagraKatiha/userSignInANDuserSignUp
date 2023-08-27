@@ -1,4 +1,4 @@
-const { default: mongoose } = require('mongoose');
+// const { default: mongoose } = require('mongoose');
 const UserNew = require('../models/userModel.js')
 
 const home = (req, res)=>{
@@ -62,7 +62,17 @@ const signIn = async (req, res)=>{
         if(password != findUser.password){
             throw new Error("Password didn't match")
         }
+
+        const token = UserNew.jwtToken()
         
+        const cookieOptions = {
+            maxAge: 24 * 60 * 60 * 1000,
+            httpOnly: true
+        }
+
+        res.cookie("token", token, cookieOptions)
+
+
         res.status(200).json({
             success: true,
             message: "User Logged in Successfully"
