@@ -5,24 +5,29 @@ const myModel = new mongoose.Schema({
         type: String,
         required: [true, "Name is required"],
         MaxLength: [50, "Name should be less than 50 chars"],
-        MinLength: [5, "Name should be greater than 5 chars"]
+        MinLength: [5, "Name should be greater than 5 chars"],
+        trim: true
     }, 
 
     email: {
         type: String, 
         requied: [true, "Email is required"],
-        unique: [true, "User already registered with same email"]
+        unique: [true, "User already registered with same email"],
+        trim: true
     },
 
     password: {
         type: String,
         requied: [true, "Password is required"],
+        select: false
     },
 
     confirmPassword: {
         type: String,
         requied: [true, "Password is required"],
     }
+}, {
+    timestamps: true
 })
 
     myModel.methods = {
