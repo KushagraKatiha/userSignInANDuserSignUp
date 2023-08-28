@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const JWT = require('jsonwebtoken')
+const bcrypt = require ('bcrypt')
 const myModel = new mongoose.Schema({
     name: {
         type: String,
@@ -25,10 +26,21 @@ const myModel = new mongoose.Schema({
     confirmPassword: {
         type: String,
         requied: [true, "Password is required"],
+        select: false
     }
 }, {
     timestamps: true
 })
+
+    myModel.pre('save', async function (next){
+        if(!this.isModified('password') || (!this.isModified('confirmPassword')) ){
+            return next()
+        }
+
+        this.password = await bcrypt.hash(this.password, 10) 
+        this.confirmPassword = await bcrypt.hash(this.confirmPassword, 10)
+        return next()
+    })
 
     myModel.methods = {
         jwtToken(){

@@ -2,6 +2,7 @@
 const UserNew = require('../models/userModel.js')
 const JWT = require('jsonwebtoken')
 const emailValidator = require('email-validator')
+const bcrypt = require ('bcrypt')
 
 const home = (req, res)=>{
     res.send('<h1>Home Page</h1>')
@@ -31,11 +32,8 @@ const signUp = async (req, res)=>{
             throw new Error("Password and confirm password didn't match !!")
         }
 
-        const user = await UserNew.create({
-            name,
-            email,
-            password
-        })
+        const user = UserNew(req.body)
+        const userInfo = user.save()
 
         res.status(200).json({
             success: true,
@@ -66,7 +64,7 @@ const signIn = async (req, res)=>{
             throw new Error("No user regestered with this email id !")
         }
 
-        if(password != findUser.password){
+        if(!bcrypt.compare(password ,findUser.password)){
             throw new Error("Password didn't match")
         }
 

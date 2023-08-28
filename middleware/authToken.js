@@ -14,6 +14,7 @@ const jwtAuth = (req, res, next) =>{
 
     try {
         const payload = JWT.verify(token, process.env.SECRET)
+        // inject user info in req
         req.user = {id: payload.id, email: payload.email}
     } catch (error) {
         res.status(400).json({
@@ -21,9 +22,6 @@ const jwtAuth = (req, res, next) =>{
             message: error.message
         })
     }
-
-    // inject user info in req
-
 
     next();
 }
