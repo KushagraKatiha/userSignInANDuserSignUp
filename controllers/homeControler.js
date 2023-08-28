@@ -113,4 +113,26 @@ const getUser = async (req, res) =>{
 }
 
 
-module.exports={home, signUp, signIn, getUser }
+// To get user logged out
+
+    const logout = (req, res) =>{
+        try{
+            const cookieOptions ={
+                expires: new Date(),
+                httpOnly: true
+            }
+            res.cookie("token", null, cookieOptions)
+            res.status(200).json({
+                success: true,
+                message: "Logged Out"
+            })
+        }catch(error){
+            res.status(400).json({
+                success: false,
+                message: error.message
+            })
+        }
+    }
+
+
+module.exports={home, signUp, signIn, getUser, logout }
